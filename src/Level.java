@@ -5,12 +5,14 @@ import java.util.Scanner;
 
 public class Level {
     private HashMap<String, Room> rooms;
+    private Player player;
 
     public Level() {
         rooms = new HashMap<String, Room>();
+        Player currentPlayer = this.player;
     }
 
-    public static void init(Level g){
+    public static void initLevel(Level g){
         Item pie = new Item("pie", "what is cream pie?");
         Item apple = new Item("apple", "this is a ripe apple, it's very healthy");
         Item dumbell = new Item("dumbell", "work out, get strong!");
@@ -60,65 +62,7 @@ public class Level {
         currentPlayer.getDescription();
         Level.Room currentRoom = currentPlayer.getCurrentRoom();
 
-        String response = "";
-        Scanner in = new Scanner(System.in);
-        System.out.println("Your possible actions are: go <roomName>, look, add <roomName>, take <itemName>, drop <itemName>, or quit");
 
-        do {
-            //display the room and the exits
-            System.out.println("you are currently in the " + currentPlayer.getCurrentRoom().getName());
-            System.out.print("what do you want to do? > ");
-            response = in.nextLine();
-            //Command command = parseCommand(response);
-            //command.execute();
-
-            if (response.contains("go")) {
-                String roomName = response.substring(3);
-                Level.Room newRoom =  g.getRoom(roomName);
-                if (currentPlayer.getCurrentRoom().getNeighborNames().contains(roomName)) {
-                    currentPlayer.moveToRoom(newRoom);
-                    currentRoom = newRoom;
-                }
-                else if(!(currentPlayer.getCurrentRoom().getNeighborNames().contains(roomName))){
-                    System.out.println(roomName + " is not a neighbor of your current room:  " + currentRoom.getName());
-                }
-            }
-
-            if (response.contains("drop")) {
-                String itemName = response.substring(5);
-                currentPlayer.removeItem(itemName);
-                currentRoom.addItem(itemName);
-                System.out.println("you have removed " + itemName + " from your inventory and added it to " + currentRoom.getName());
-
-            } else if (response.contains("take")) {
-                String itemName = response.substring(5);
-                currentRoom.removeItem(itemName);
-                currentPlayer.addItem(itemName);
-                System.out.println("you have removed " + itemName + " from " + currentRoom.getName() + " and added it to your inventory.");
-
-            } else if (response.contains("look")) {
-                String msg = currentPlayer.getCurrentRoom().displayAnimalList();
-                System.out.println("you can go to: " + currentRoom.getNeighborNames() + ". these are the items in your room: " + currentPlayer.getCurrentRoom().displayItems() +
-                        ". these are the animals in your room: " + msg);
-
-            } else if (response.contains("add")) {
-                String name = response.substring(3);
-                Scanner in2 = new Scanner(System.in);
-                System.out.println("type a description for your room");
-                String userDescription = "";
-                userDescription = in.next();
-
-                g.addRoom(name, userDescription);
-                g.addDirectedEdge(currentRoom.getName(), name);
-            } else if (response.contains("quit")) {
-                System.out.println("buh-bye");
-                break;
-
-            } else {
-                System.out.println("Your possible actions are: go <roomName>, look, add <roomName>, or quit");
-            }
-        }
-        while (!response.equals("quit"));
         moveAllCreatures(animalsList);
     }
 
@@ -158,6 +102,10 @@ public class Level {
         Room n2 = this.getRoom(name2);
         n1.addNeighbor(n2);
         n2.addNeighbor(n1);
+    }
+
+    public Player getPlayer() {
+        return this.player;
     }
 
     public class Room {
@@ -283,3 +231,8 @@ public class Level {
 
     }
 }
+
+
+
+
+

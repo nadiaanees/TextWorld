@@ -97,6 +97,16 @@ public class Player {
         }
         return false;
     }
+
+    public boolean takeItem(String itemName) {
+        for(Item a: items){
+            if(a.getName().equals(itemName)){
+                items.add(a);
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 
